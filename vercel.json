@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "varshini-bloom-connect",
+  "name": "varshini-enterprises-ecommerce",
   "builds": [
     {
       "src": "package.json",

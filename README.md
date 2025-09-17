@@ -34,7 +34,7 @@ To run this project locally:
 git clone <repository-url>
 
 # Navigate to project directory
-cd varshini-bloom-connect
+cd varshini-enterprises-ecommerce
 
 # Install dependencies
 npm install
