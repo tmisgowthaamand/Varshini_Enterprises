@@ -50,7 +50,7 @@ const App = () => (
                   <Route path="/terms-conditions" element={<TermsConditions />} />
                   <Route path="/shipping-policy" element={<ShippingPolicy />} />
                   <Route path="/cancellation-refund" element={<CancellationRefund />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  {/* Catch-all route for 404 */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </main>

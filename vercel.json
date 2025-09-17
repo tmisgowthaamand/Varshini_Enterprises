@@ -36,51 +36,7 @@
   ],
   "rewrites": [
     {
-      "source": "/products",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/product/:id",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/partner",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/awareness",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/about-us",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/contact",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/orders",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/order-confirmation",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/privacy-policy",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/terms-conditions",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/shipping-policy",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/cancellation-refund",
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ]
