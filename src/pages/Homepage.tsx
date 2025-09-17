@@ -92,7 +92,7 @@ const Homepage = () => {
               
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" asChild className="bg-white text-gray-900 hover:bg-gray-100 font-bold shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-white">
-                  <Link to="/shop" className="text-gray-900 font-bold">
+                  <Link to="/products" className="text-gray-900 font-bold">
                     <ShoppingCart className="w-5 h-5 mr-2 text-gray-900" />
                     Buy Now
                   </Link>
@@ -170,19 +170,19 @@ const Homepage = () => {
                 title: 'Sanitary Napkins',
                 description: 'Ultra-soft, absorbent napkins for everyday comfort and protection.',
                 image: sanitaryPadsImage,
-                href: '/shop?category=sanitary-napkins',
+                href: '/products?category=sanitary-napkins',
               },
               {
                 title: 'Hygiene Pads',
                 description: 'Premium organic cotton pads for sensitive skin and heavy flow days.',
                 image: hygienePadsImage,
-                href: '/shop?category=hygiene-pads',
+                href: '/products?category=hygiene-pads',
               },
               {
                 title: 'Bulk Packs',
                 description: 'Economy packs for NGOs, schools, and bulk requirements.',
                 image: sanitaryPadsImage,
-                href: '/shop?category=bulk-packs',
+                href: '/products?category=bulk-packs',
               },
             ].map((category, index) => (
               <Card key={index} className="group overflow-hidden border-0 shadow-card hover:shadow-hover transition-all duration-300 hover:-translate-y-1">
@@ -232,7 +232,7 @@ const Homepage = () => {
 
           <div className="text-center">
             <Button size="lg" asChild>
-              <Link to="/shop">
+              <Link to="/products">
                 View All Products
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Link>
