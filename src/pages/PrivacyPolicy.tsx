@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Shield, Eye, Lock, Database, Users, Phone, MapPin, Mail, CheckCircle } from 'lucide-react';
+import { Shield, Eye, Lock, Database, Users, Phone, MapPin, Mail, CheckCircle, Headphones } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import BackButton from '@/components/BackButton';
@@ -224,26 +224,24 @@ const PrivacyPolicy = () => {
               </CardHeader>
               <CardContent>
                 <p className="font-inter text-muted-foreground mb-6">
-                  If you have any privacy-related concerns or requests, please contact:
+                  For any questions or concerns about this Privacy Policy, please contact:
                 </p>
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <MapPin className="w-5 h-5 text-primary mt-0.5" />
-                    <div>
-                      <p className="font-nunito font-semibold text-foreground">Varshini Enterprises</p>
-                      <p className="font-inter text-muted-foreground">
-                        No 06, South Canal Bank Road, Mandaveli<br />
-                        Chennai, Tamil Nadu – 600028
-                      </p>
-                    </div>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2">
+                    <MapPin className="w-4 h-4 text-primary" />
+                    <span className="font-inter text-muted-foreground">No 06, South Canal Bank Road, Mandaveli, Chennai, Tamil Nadu – 600028</span>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Phone className="w-5 h-5 text-primary" />
+                  <div className="flex items-center space-x-2">
+                    <Phone className="w-4 h-4 text-primary" />
                     <span className="font-inter text-muted-foreground">+91 91762 54234</span>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Mail className="w-5 h-5 text-primary" />
-                    <span className="font-inter text-muted-foreground">contact@varshinienterprises.shop</span>
+                  <div className="flex items-center space-x-2">
+                    <Mail className="w-4 h-4 text-primary" />
+                    <span className="font-inter text-muted-foreground">Email: varshinienterprises29@gmail.com</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Headphones className="w-4 h-4 text-primary" />
+                    <span className="font-inter text-muted-foreground">Customer Support: contact@varshinienterprises.shop</span>
                   </div>
                 </div>
               </CardContent>

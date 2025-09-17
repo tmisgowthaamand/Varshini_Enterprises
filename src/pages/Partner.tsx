@@ -366,7 +366,7 @@ const Partner = () => {
               </Button>
               <Button size="lg" variant="outline">
                 <Mail className="w-5 h-5 mr-2" />
-                Email: partners@varshinienterprises.com
+                Email: varshinienterprises29@gmail.com
               </Button>
             </div>
           </div>

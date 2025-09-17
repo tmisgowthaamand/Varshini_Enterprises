@@ -74,7 +74,7 @@ const Footer = () => {
               <li className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-primary-foreground/80" />
                 <span className="font-inter text-primary-foreground/80">
-                  contact@varshinienterprises.shop
+                  varshinienterprises29@gmail.com
                 </span>
               </li>
             </ul>

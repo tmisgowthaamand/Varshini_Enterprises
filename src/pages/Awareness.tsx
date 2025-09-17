@@ -316,7 +316,7 @@ const Awareness = () => {
                     </div>
                     <div className="flex items-center justify-center space-x-2">
                       <Mail className="w-4 h-4" />
-                      <span className="font-inter">support@varshinienterprises.com</span>
+                      <span className="font-inter">varshinienterprises29@gmail.com</span>
                     </div>
                     <div className="flex items-center justify-center space-x-2">
                       <MapPin className="w-4 h-4" />

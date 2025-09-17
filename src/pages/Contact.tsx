@@ -60,9 +60,9 @@ const Contact = () => {
     {
       icon: Mail,  
       title: 'Email Address',
-      info: 'contact@varshinienterprises.shop',
+      info: 'varshinienterprises29@gmail.com',
       description: 'We reply within 24 hours',
-      action: 'mailto:contact@varshinienterprises.shop',
+      action: 'mailto:varshinienterprises29@gmail.com',
     },
     {
       icon: MapPin,

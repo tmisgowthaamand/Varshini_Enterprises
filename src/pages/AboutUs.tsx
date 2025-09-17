@@ -365,7 +365,7 @@ const AboutUs = () => {
                 <Mail className="w-8 h-8 text-primary mx-auto mb-4" />
                 <h3 className="font-nunito font-semibold text-foreground mb-2">Email Us</h3>
                 <p className="font-inter text-muted-foreground text-sm">
-                  info@varshinienterprises.com<br />
+                  varshinienterprises29@gmail.com<br />
                   We reply within 24 hours
                 </p>
               </CardContent>

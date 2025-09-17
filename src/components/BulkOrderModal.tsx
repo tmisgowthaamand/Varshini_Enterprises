@@ -335,7 +335,7 @@ const BulkOrderModal: React.FC<BulkOrderModalProps> = ({
                 <div>
                   <p className="font-medium text-foreground">Need immediate assistance?</p>
                   <p className="text-sm text-muted-foreground">
-                    Call us at +91 98765 43210 or email bulk@varshinienterprises.com
+                    Call us at +91 98765 43210 or email varshinienterprises29@gmail.com
                   </p>
                 </div>
               </div>

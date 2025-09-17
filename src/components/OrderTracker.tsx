@@ -329,7 +329,7 @@ const OrderTracker: React.FC = () => {
                 <div>
                   <p className="font-medium text-foreground">Need Help?</p>
                   <p className="text-sm text-muted-foreground">
-                    Contact our support team at +91 98765 43210 or email support@varshinienterprises.com
+                    Contact our support team at +91 98765 43210 or email varshinienterprises29@gmail.com
                   </p>
                 </div>
               </div>

@@ -320,7 +320,7 @@ const OrderConfirmation = () => {
                   </div>
                   <div className="flex items-center space-x-2 text-sm">
                     <Mail className="w-4 h-4 text-primary" />
-                    <span>support@varshinienterprises.com</span>
+                    <span>varshinienterprises29@gmail.com</span>
                   </div>
                 </div>
                 <Button asChild variant="outline" size="sm" className="w-full">
