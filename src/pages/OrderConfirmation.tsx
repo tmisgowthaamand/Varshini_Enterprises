@@ -258,7 +258,7 @@ const OrderConfirmation = () => {
                   </Link>
                 </Button>
                 <Button asChild className="w-full">
-                  <Link to="/shop">
+                  <Link to="/products">
                     <ArrowRight className="w-4 h-4 mr-2" />
                     Continue Shopping
                   </Link>

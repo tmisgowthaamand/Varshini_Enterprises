@@ -56,7 +56,7 @@ const Navigation = () => {
               </Link>
             </Button>
             <Button size="sm" asChild>
-              <Link to="/shop">
+              <Link to="/products">
                 <ShoppingCart className="w-4 h-4 mr-2" />
                 Shop Now
               </Link>
@@ -104,7 +104,7 @@ const Navigation = () => {
                   </Link>
                 </Button>
                 <Button size="sm" asChild>
-                  <Link to="/shop" onClick={() => setIsOpen(false)}>
+                  <Link to="/products" onClick={() => setIsOpen(false)}>
                     <ShoppingCart className="w-4 h-4 mr-2" />
                     Shop Now
                   </Link>

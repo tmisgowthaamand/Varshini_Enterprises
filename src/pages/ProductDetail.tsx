@@ -150,14 +150,14 @@ const ProductDetail = () => {
         <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-8">
           <Link to="/" className="hover:text-primary">Home</Link>
           <span>/</span>
-          <Link to="/shop" className="hover:text-primary">Shop</Link>
+          <Link to="/products" className="hover:text-primary">Shop</Link>
           <span>/</span>
           <span className="text-foreground">{product.name}</span>
         </nav>
 
         {/* Back Button */}
         <Button variant="ghost" asChild className="mb-6">
-          <Link to="/shop">
+          <Link to="/products">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Shop
           </Link>

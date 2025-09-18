@@ -290,7 +290,7 @@ const Awareness = () => {
 
               <div className="mt-8">
                 <Button asChild>
-                  <Link to="/shop">
+                  <Link to="/products">
                     <ArrowRight className="w-4 h-4 mr-2" />
                     Shop Quality Products
                   </Link>
@@ -349,7 +349,7 @@ const Awareness = () => {
                 </Link>
               </Button>
               <Button size="lg" variant="secondary">
-                <Link to="/shop" className="flex items-center">
+                <Link to="/products" className="flex items-center">
                   <Heart className="w-5 h-5 mr-2" />
                   Support Our Cause
                 </Link>

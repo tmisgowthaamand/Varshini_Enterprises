@@ -124,7 +124,7 @@ const AboutUs = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild className="bg-white text-gray-900 hover:bg-gray-100 font-bold shadow-lg">
-                <Link to="/shop">
+                <Link to="/products">
                   <ArrowRight className="w-5 h-5 mr-2" />
                   Shop Our Products
                 </Link>
