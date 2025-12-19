@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, CreditCard, Smartphone, Truck, CheckCircle } from 'lucide-react';
+import { X, Truck, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -20,7 +20,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   total,
   itemCount,
 }) => {
-  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
+  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>('cash-on-delivery' as PaymentMethod);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -31,14 +31,6 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
       description: 'Pay when your order arrives',
       icon: Truck,
       popular: false,
-    },
-    {
-      id: 'debit-credit' as PaymentMethod,
-      name: 'Debit/Credit Card',
-      description: 'Secure payment with your card',
-      icon: CreditCard,
-      popular: true,
-      disabled: true,
     },
   ];
 
@@ -118,54 +110,37 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
           </div>
 
           {/* Payment Methods */}
-          <div className="space-y-3 mb-6">
-            <h3 className="font-nunito font-semibold text-foreground mb-3">
-              Select Payment Method
-            </h3>
+          <div className="flex justify-center mb-6">
+            <div className="w-full max-w-md space-y-3">
+              {paymentMethods.map((method) => {
+                const Icon = method.icon;
+                const isSelected = selectedMethod === method.id;
 
-            {paymentMethods.map((method) => {
-              const Icon = method.icon;
-              const isSelected = selectedMethod === method.id;
-              const isDisabled = (method as any).disabled;
-
-              return (
-                <div
-                  key={method.id}
-                  onClick={() => !isDisabled && handlePaymentSelect(method.id)}
-                  className={`relative p-4 border-2 rounded-lg transition-all ${isDisabled
-                      ? 'opacity-50 cursor-not-allowed border-muted bg-muted/20'
-                      : isSelected
-                        ? 'border-primary bg-primary/5 cursor-pointer'
-                        : 'border-border hover:border-primary/50 cursor-pointer'
-                    }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className={`p-2 rounded-full ${isSelected ? 'bg-primary text-white' : 'bg-muted'
-                      }`}>
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2">
-                        <span className="font-nunito font-semibold text-foreground">
-                          {method.name}
-                        </span>
-                        {method.popular && (
-                          <Badge variant="secondary" className="text-xs">
-                            Popular
-                          </Badge>
-                        )}
+                return (
+                  <div
+                    key={method.id}
+                    className="relative p-6 border-2 rounded-xl transition-all border-primary bg-primary/5 cursor-default"
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="p-3 rounded-full bg-primary text-white">
+                        <Icon className="w-6 h-6" />
                       </div>
-                      <p className="text-sm text-muted-foreground">
-                        {method.description}
-                      </p>
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2">
+                          <span className="font-nunito font-bold text-lg text-foreground">
+                            {method.name}
+                          </span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          {method.description}
+                        </p>
+                      </div>
+                      <CheckCircle className="w-6 h-6 text-primary" />
                     </div>
-                    {isSelected && (
-                      <CheckCircle className="w-5 h-5 text-primary" />
-                    )}
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
 
           {/* Confirm Button */}

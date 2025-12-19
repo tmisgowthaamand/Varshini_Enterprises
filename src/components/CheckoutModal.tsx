@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, MapPin, CreditCard, Package, CheckCircle, AlertCircle, Copy } from 'lucide-react';
+import { X, MapPin, Package, CheckCircle, AlertCircle, Copy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -62,13 +62,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
     pincode: '',
     landmark: '',
   });
-  const [paymentDetails, setPaymentDetails] = useState({
-    cardNumber: '',
-    expiry: '',
-    cvv: '',
-    upiId: '',
-  });
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>('cash-on-delivery' as PaymentMethod);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
   const { toast } = useToast();
@@ -81,14 +75,6 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
       description: 'Pay when your order arrives',
       icon: Package,
       popular: false,
-    },
-    {
-      id: 'debit-credit' as PaymentMethod,
-      name: 'Debit/Credit Card',
-      description: 'Secure payment with your card',
-      icon: CreditCard,
-      popular: true,
-      disabled: true,
     },
   ];
 
@@ -131,9 +117,6 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
     setCurrentStep('confirmation');
   };
 
-  const handlePaymentDetailsChange = (field: string, value: string) => {
-    setPaymentDetails(prev => ({ ...prev, [field]: value }));
-  };
 
   const handleOrderConfirm = async () => {
     setIsProcessing(true);
@@ -194,7 +177,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
               <div className="flex items-center space-x-2 mt-2">
                 {['address', 'payment', 'confirmation', 'success'].map((step, index) => (
                   <div key={step} className="flex items-center">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${currentStep === step || (index < ['address', 'payment', 'confirmation', 'success'].indexOf(currentStep))
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${currentStep === step || index < ['address', 'payment', 'confirmation', 'success'].indexOf(currentStep)
                       ? 'bg-primary text-white'
                       : 'bg-muted text-muted-foreground'
                       }`}>
@@ -328,55 +311,37 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
           {currentStep === 'payment' && (
             <div className="space-y-6">
-              <h3 className="font-nunito font-semibold text-lg mb-4 flex items-center">
-                <CreditCard className="w-5 h-5 mr-2 text-primary" />
-                Select Payment Method
-              </h3>
+              <div className="flex justify-center">
+                <div className="w-full max-w-md space-y-3">
+                  {paymentMethods.map((method) => {
+                    const Icon = method.icon;
+                    const isSelected = selectedPaymentMethod === method.id;
 
-              <div className="space-y-3">
-                {paymentMethods.map((method) => {
-                  const Icon = method.icon;
-                  const isSelected = selectedPaymentMethod === method.id;
-                  const isDisabled = method.disabled;
-
-                  return (
-                    <div
-                      key={method.id}
-                      onClick={() => !isDisabled && handlePaymentSelect(method.id)}
-                      className={`relative p-4 border-2 rounded-lg transition-all ${isDisabled
-                        ? 'opacity-50 cursor-not-allowed border-muted bg-muted/20'
-                        : isSelected
-                          ? 'border-primary bg-primary/5 cursor-pointer'
-                          : 'border-border hover:border-primary/50 cursor-pointer'
-                        }`}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className={`p-2 rounded-full ${isSelected ? 'bg-primary text-white' : 'bg-muted'
-                          }`}>
-                          <Icon className="w-5 h-5" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-2">
-                            <span className="font-nunito font-semibold text-foreground">
-                              {method.name}
-                            </span>
-                            {method.popular && (
-                              <Badge variant="secondary" className="text-xs">
-                                Popular
-                              </Badge>
-                            )}
+                    return (
+                      <div
+                        key={method.id}
+                        className="relative p-6 border-2 rounded-xl transition-all border-primary bg-primary/5 cursor-default"
+                      >
+                        <div className="flex items-center space-x-4">
+                          <div className="p-3 rounded-full bg-primary text-white">
+                            <Icon className="w-6 h-6" />
                           </div>
-                          <p className="text-sm text-muted-foreground">
-                            {method.description}
-                          </p>
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-2">
+                              <span className="font-nunito font-bold text-lg text-foreground">
+                                {method.name}
+                              </span>
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              {method.description}
+                            </p>
+                          </div>
+                          <CheckCircle className="w-6 h-6 text-primary" />
                         </div>
-                        {isSelected && (
-                          <CheckCircle className="w-5 h-5 text-primary" />
-                        )}
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
 
 
