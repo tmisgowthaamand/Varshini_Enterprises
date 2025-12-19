@@ -8,8 +8,8 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import BackButton from '@/components/BackButton';
 import ScrollToTop from '@/components/ScrollToTop';
-import sanitaryPadsImage from '@/assets/product-sanitary-pads.jpg';
-import hygienePadsImage from '@/assets/product-hygiene-pads.jpg';
+import sanitaryPadsImage from '@/assets/product-sanitary-pads.png';
+import hygienePadsImage from '@/assets/product-hygiene-pads.png';
 
 const OrderConfirmation = () => {
   const [searchParams] = useSearchParams();
@@ -316,11 +316,11 @@ const OrderConfirmation = () => {
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2 text-sm">
                     <Phone className="w-4 h-4 text-primary" />
-                    <span>+91 98765 43210</span>
+                    <span>+91 91762 54234</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm">
                     <Mail className="w-4 h-4 text-primary" />
-                    <span>varshinienterprises29@gmail.com</span>
+                    <span>varshinienterprises099@gmail.com</span>
                   </div>
                 </div>
                 <Button asChild variant="outline" size="sm" className="w-full">

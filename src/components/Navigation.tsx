@@ -12,7 +12,7 @@ const Navigation = () => {
     { name: 'Home', href: '/' },
     { name: 'Products', href: '/products' },
     { name: 'Awareness', href: '/awareness' },
-    { name: 'Partner With Us', href: '/partner' },
+
     { name: 'Contact', href: '/contact' },
   ];
 
@@ -37,8 +37,8 @@ const Navigation = () => {
                 to={item.href}
                 className={cn(
                   "font-inter text-sm font-medium transition-colors hover:text-primary relative py-2",
-                  isActive(item.href) 
-                    ? "text-primary after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary" 
+                  isActive(item.href)
+                    ? "text-primary after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary"
                     : "text-foreground/70"
                 )}
               >
@@ -87,8 +87,8 @@ const Navigation = () => {
                   to={item.href}
                   className={cn(
                     "font-inter text-base font-medium py-2 px-4 rounded-md transition-colors",
-                    isActive(item.href) 
-                      ? "text-primary bg-secondary" 
+                    isActive(item.href)
+                      ? "text-primary bg-secondary"
                       : "text-foreground/70 hover:text-primary hover:bg-muted"
                   )}
                   onClick={() => setIsOpen(false)}

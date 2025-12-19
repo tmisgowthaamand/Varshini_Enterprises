@@ -7,8 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import ProductCard from '@/components/ProductCard';
 import BackButton from '@/components/BackButton';
 import ScrollToTop from '@/components/ScrollToTop';
-import sanitaryPadsImage from '@/assets/product-sanitary-pads.jpg';
-import hygienePadsImage from '@/assets/product-hygiene-pads.jpg';
+import sanitaryPadsImage from '@/assets/product-sanitary-pads.png';
+import hygienePadsImage from '@/assets/product-hygiene-pads.png';
 
 const Shop = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -267,11 +267,10 @@ const Shop = () => {
             </p>
           </div>
         ) : (
-          <div className={`grid gap-6 ${
-            viewMode === 'grid' 
-              ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' 
+          <div className={`grid gap-6 ${viewMode === 'grid'
+              ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
               : 'grid-cols-1'
-          }`}>
+            }`}>
             {filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}

@@ -26,25 +26,19 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
   const paymentMethods = [
     {
-      id: 'debit-credit' as PaymentMethod,
-      name: 'Debit/Credit Card',
-      description: 'Secure payment with your card',
-      icon: CreditCard,
-      popular: true,
-    },
-    {
-      id: 'upi' as PaymentMethod,
-      name: 'UPI Payment',
-      description: 'Pay using UPI apps like GPay, PhonePe',
-      icon: Smartphone,
-      popular: true,
-    },
-    {
       id: 'cash-on-delivery' as PaymentMethod,
       name: 'Cash on Delivery',
       description: 'Pay when your order arrives',
       icon: Truck,
       popular: false,
+    },
+    {
+      id: 'debit-credit' as PaymentMethod,
+      name: 'Debit/Credit Card',
+      description: 'Secure payment with your card',
+      icon: CreditCard,
+      popular: true,
+      disabled: true,
     },
   ];
 
@@ -56,12 +50,12 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     if (!selectedMethod) return;
 
     setIsProcessing(true);
-    
+
     // Simulate payment processing
     setTimeout(() => {
       setIsProcessing(false);
       setIsSuccess(true);
-      
+
       // Auto close after success
       setTimeout(() => {
         onPaymentSelect(selectedMethod);
@@ -128,25 +122,26 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
             <h3 className="font-nunito font-semibold text-foreground mb-3">
               Select Payment Method
             </h3>
-            
+
             {paymentMethods.map((method) => {
               const Icon = method.icon;
               const isSelected = selectedMethod === method.id;
-              
+              const isDisabled = (method as any).disabled;
+
               return (
                 <div
                   key={method.id}
-                  onClick={() => handlePaymentSelect(method.id)}
-                  className={`relative p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                    isSelected
-                      ? 'border-primary bg-primary/5'
-                      : 'border-border hover:border-primary/50'
-                  }`}
+                  onClick={() => !isDisabled && handlePaymentSelect(method.id)}
+                  className={`relative p-4 border-2 rounded-lg transition-all ${isDisabled
+                      ? 'opacity-50 cursor-not-allowed border-muted bg-muted/20'
+                      : isSelected
+                        ? 'border-primary bg-primary/5 cursor-pointer'
+                        : 'border-border hover:border-primary/50 cursor-pointer'
+                    }`}
                 >
                   <div className="flex items-center space-x-3">
-                    <div className={`p-2 rounded-full ${
-                      isSelected ? 'bg-primary text-white' : 'bg-muted'
-                    }`}>
+                    <div className={`p-2 rounded-full ${isSelected ? 'bg-primary text-white' : 'bg-muted'
+                      }`}>
                       <Icon className="w-5 h-5" />
                     </div>
                     <div className="flex-1">

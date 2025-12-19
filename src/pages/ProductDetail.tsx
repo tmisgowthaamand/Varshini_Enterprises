@@ -10,8 +10,8 @@ import BulkOrderModal from '@/components/BulkOrderModal';
 import { useCart } from '@/contexts/CartContext';
 import { useFavorites } from '@/contexts/FavoritesContext';
 import { useToast } from '@/hooks/use-toast';
-import sanitaryPadsImage from '@/assets/product-sanitary-pads.jpg';
-import hygienePadsImage from '@/assets/product-hygiene-pads.jpg';
+import sanitaryPadsImage from '@/assets/product-sanitary-pads.png';
+import hygienePadsImage from '@/assets/product-hygiene-pads.png';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -47,7 +47,7 @@ const ProductDetail = () => {
     ],
     specifications: {
       'Length': '240mm',
-      'Width': '180mm', 
+      'Width': '180mm',
       'Thickness': '3mm',
       'Absorbency': 'Regular Flow (8-10 hours)',
       'Pack Size': '10 pieces',
@@ -95,7 +95,7 @@ const ProductDetail = () => {
 
     // Check if item already exists in cart
     const existingItem = cartState.items.find(item => item.id === product.id);
-    
+
     if (existingItem) {
       // If item exists, update quantity by adding the selected quantity
       updateQuantity(product.id, existingItem.quantity + quantity);
@@ -107,7 +107,7 @@ const ProductDetail = () => {
         updateQuantity(product.id, quantity);
       }, 0);
     }
-    
+
     toast({
       title: "Added to Cart!",
       description: `${quantity} x ${product.name} added to your cart.`,
@@ -179,9 +179,8 @@ const ProductDetail = () => {
                 <button
                   key={index}
                   onClick={() => setSelectedImage(index)}
-                  className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                    selectedImage === index ? 'border-primary' : 'border-transparent'
-                  }`}
+                  className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${selectedImage === index ? 'border-primary' : 'border-transparent'
+                    }`}
                 >
                   <img
                     src={image}
@@ -202,18 +201,17 @@ const ProductDetail = () => {
               <h1 className="font-nunito font-bold text-3xl text-foreground mb-4">
                 {product.name}
               </h1>
-              
+
               {/* Rating */}
               <div className="flex items-center space-x-2 mb-4">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`w-5 h-5 ${
-                        i < Math.floor(product.rating)
-                          ? 'text-yellow-400 fill-current'
-                          : 'text-gray-300'
-                      }`}
+                      className={`w-5 h-5 ${i < Math.floor(product.rating)
+                        ? 'text-yellow-400 fill-current'
+                        : 'text-gray-300'
+                        }`}
                     />
                   ))}
                 </div>
@@ -305,15 +303,15 @@ const ProductDetail = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button 
-                  size="lg" 
-                  onClick={handleAddToCart} 
+                <Button
+                  size="lg"
+                  onClick={handleAddToCart}
                   className="flex-1"
                   disabled={!product.inStock}
                 >
                   <ShoppingCart className="w-5 h-5 mr-2" />
-                  {product.inStock 
-                    ? `Add to Cart - ₹${product.price * quantity}` 
+                  {product.inStock
+                    ? `Add to Cart - ₹${product.price * quantity}`
                     : 'Out of Stock'
                   }
                 </Button>
@@ -325,11 +323,10 @@ const ProductDetail = () => {
 
               <div className="flex items-center space-x-4">
                 <Button variant="ghost" size="sm" onClick={handleToggleFavorite}>
-                  <Heart className={`w-4 h-4 mr-2 transition-colors ${
-                    isFavorite(product.id) 
-                      ? 'text-destructive fill-destructive' 
-                      : 'text-muted-foreground hover:text-destructive'
-                  }`} />
+                  <Heart className={`w-4 h-4 mr-2 transition-colors ${isFavorite(product.id)
+                    ? 'text-destructive fill-destructive'
+                    : 'text-muted-foreground hover:text-destructive'
+                    }`} />
                   {isFavorite(product.id) ? 'Remove from Favorites' : 'Add to Favorites'}
                 </Button>
                 <Button variant="ghost" size="sm">
@@ -350,7 +347,7 @@ const ProductDetail = () => {
                     </p>
                   </div>
                   <Button asChild className="bg-green-500 hover:bg-green-600">
-                    <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer">
+                    <a href="https://wa.me/919176254234" target="_blank" rel="noopener noreferrer">
                       WhatsApp Now
                     </a>
                   </Button>
@@ -368,7 +365,7 @@ const ProductDetail = () => {
               <TabsTrigger value="specifications">Specifications</TabsTrigger>
               <TabsTrigger value="certifications">Certifications</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="description" className="mt-6">
               <Card>
                 <CardContent className="p-6">
@@ -384,7 +381,7 @@ const ProductDetail = () => {
                 </CardContent>
               </Card>
             </TabsContent>
-            
+
             <TabsContent value="specifications" className="mt-6">
               <Card>
                 <CardContent className="p-6">
@@ -400,7 +397,7 @@ const ProductDetail = () => {
                 </CardContent>
               </Card>
             </TabsContent>
-            
+
             <TabsContent value="certifications" className="mt-6">
               <Card>
                 <CardContent className="p-6">

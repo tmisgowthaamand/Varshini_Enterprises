@@ -10,7 +10,7 @@ import Footer from "./components/Footer";
 import FloatingCartButton from "./components/FloatingCartButton";
 import Homepage from "./pages/Homepage";
 import Shop from "./pages/Shop";
-import Partner from "./pages/Partner";
+
 import Contact from "./pages/Contact";
 import ProductDetail from "./pages/ProductDetail";
 import Awareness from "./pages/Awareness";
@@ -39,7 +39,7 @@ const App = () => (
                 <Routes>
                   <Route path="/" element={<Homepage />} />
                   <Route path="/products" element={<Shop />} />
-                  <Route path="/partner" element={<Partner />} />
+
                   <Route path="/product/:id" element={<ProductDetail />} />
                   <Route path="/awareness" element={<Awareness />} />
                   <Route path="/about-us" element={<AboutUs />} />

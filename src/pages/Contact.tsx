@@ -21,13 +21,13 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Simulate form submission
     toast({
       title: "Message Sent Successfully!",
       description: "We'll get back to you within 24 hours.",
     });
-    
+
     // Reset form
     setFormData({
       name: '',
@@ -58,11 +58,11 @@ const Contact = () => {
       action: 'https://wa.me/919176254234',
     },
     {
-      icon: Mail,  
+      icon: Mail,
       title: 'Email Address',
-      info: 'varshinienterprises29@gmail.com',
+      info: ['varshinienterprises099@gmail.com', 'contact@varshinienterprises.shop'],
       description: 'We reply within 24 hours',
-      action: 'mailto:varshinienterprises29@gmail.com',
+      action: 'mailto:varshinienterprises099@gmail.com',
     },
     {
       icon: MapPin,
@@ -112,8 +112,17 @@ const Contact = () => {
                   <h3 className="font-nunito font-semibold text-lg text-foreground mb-2">
                     {contact.title}
                   </h3>
-                  <div className="font-inter text-primary font-medium mb-2 min-h-[3rem] flex items-center justify-center">
-                    <span className="text-center">{contact.info}</span>
+                  <div className="font-inter text-primary font-medium mb-2 min-h-[3rem] flex flex-col items-center justify-center space-y-1">
+                    {Array.isArray(contact.info) ? (
+                      contact.info.map((email, i) => (
+                        <div key={i} className="flex items-center space-x-2">
+                          <Mail className="w-4 h-4" />
+                          <span className="text-center">{email}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <span className="text-center whitespace-pre-line">{contact.info}</span>
+                    )}
                   </div>
                   <p className="font-inter text-sm text-muted-foreground mb-4 flex-grow flex items-center justify-center text-center">
                     {contact.description}
@@ -270,22 +279,6 @@ const Contact = () => {
                         <span className="font-inter text-sm">Phone: Immediate during business hours</span>
                       </li>
                     </ul>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-0 shadow-card bg-secondary">
-                  <CardContent className="p-6">
-                    <h3 className="font-nunito font-semibold text-lg text-foreground mb-3">
-                      Need Bulk Orders?
-                    </h3>
-                    <p className="font-inter text-muted-foreground mb-4">
-                      For NGOs, schools, and bulk distributors, we offer special pricing and dedicated support.
-                    </p>
-                    <Button asChild>
-                      <a href="/partner">
-                        Partner With Us
-                      </a>
-                    </Button>
                   </CardContent>
                 </Card>
               </div>

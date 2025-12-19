@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Heart, 
-  Users, 
-  BookOpen, 
-  Award, 
-  TrendingUp, 
-  Shield, 
+import {
+  Heart,
+  Users,
+  BookOpen,
+  Award,
+  TrendingUp,
+  Shield,
   Lightbulb,
   Target,
   CheckCircle,
@@ -128,25 +128,18 @@ const Awareness = () => {
               <span className="block text-white/90">Menstrual Health</span>
             </h1>
             <p className="font-inter text-xl text-white/80 mb-8 max-w-3xl mx-auto">
-              Education, awareness, and access to quality menstrual products are fundamental rights. 
+              Education, awareness, and access to quality menstrual products are fundamental rights.
               Join us in creating a world where no woman or girl is held back by her period.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild className="bg-white text-gray-900 hover:bg-gray-100 font-bold shadow-lg">
-                <Link to="/partner">
-                  <Users className="w-5 h-5 mr-2" />
-                  Join Our Mission
-                </Link>
-              </Button>
-              <Button size="lg" asChild className="bg-white text-gray-900 hover:bg-gray-100 font-bold shadow-lg">
-                <Link to="/contact">
-                  <Phone className="w-5 h-5 mr-2" />
-                  Get Involved
-                </Link>
-              </Button>
-            </div>
+            <Button size="lg" asChild className="bg-white text-gray-900 hover:bg-gray-100 font-bold shadow-lg">
+              <Link to="/contact">
+                <Phone className="w-5 h-5 mr-2" />
+                Get Involved
+              </Link>
+            </Button>
           </div>
         </div>
+
       </section>
 
       {/* Statistics Section */}
@@ -182,10 +175,10 @@ const Awareness = () => {
             })}
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Myth Busting Section */}
-      <section className="py-16">
+      < section className="py-16" >
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="font-nunito font-bold text-3xl md:text-4xl text-foreground mb-4">
@@ -227,10 +220,10 @@ const Awareness = () => {
             })}
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Our Initiatives */}
-      <section className="py-16 bg-gradient-soft">
+      < section className="py-16 bg-gradient-soft" >
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="font-nunito font-bold text-3xl md:text-4xl text-foreground mb-4">
@@ -265,10 +258,10 @@ const Awareness = () => {
             })}
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Menstrual Health Tips */}
-      <section className="py-16">
+      < section className="py-16" >
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -278,7 +271,7 @@ const Awareness = () => {
               <p className="font-inter text-lg text-muted-foreground mb-8">
                 Simple practices that can make a significant difference in menstrual health and hygiene.
               </p>
-              
+
               <div className="space-y-4">
                 {tips.map((tip, index) => (
                   <div key={index} className="flex items-start space-x-3">
@@ -308,15 +301,15 @@ const Awareness = () => {
                   <p className="font-inter text-white/90 mb-6">
                     Our team is here to provide guidance, answer questions, and connect you with resources.
                   </p>
-                  
+
                   <div className="space-y-3">
                     <div className="flex items-center justify-center space-x-2">
                       <Phone className="w-4 h-4" />
-                      <span className="font-inter">+91 98765 43210</span>
+                      <span className="font-inter">+91 91762 54234</span>
                     </div>
                     <div className="flex items-center justify-center space-x-2">
                       <Mail className="w-4 h-4" />
-                      <span className="font-inter">varshinienterprises29@gmail.com</span>
+                      <span className="font-inter">varshinienterprises099@gmail.com</span>
                     </div>
                     <div className="flex items-center justify-center space-x-2">
                       <MapPin className="w-4 h-4" />
@@ -328,17 +321,17 @@ const Awareness = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Call to Action */}
-      <section className="py-16 bg-primary">
+      < section className="py-16 bg-primary" >
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-3xl mx-auto">
             <h2 className="font-nunito font-bold text-3xl md:text-4xl text-white mb-6">
               Together, We Can Create Change
             </h2>
             <p className="font-inter text-xl text-white/80 mb-8">
-              Join our mission to ensure every woman and girl has access to quality menstrual products and education. 
+              Join our mission to ensure every woman and girl has access to quality menstrual products and education.
               Your support can transform lives and communities.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -357,11 +350,11 @@ const Awareness = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Scroll to Top Button */}
-      <ScrollToTop />
-    </div>
+      < ScrollToTop />
+    </div >
   );
 };
 

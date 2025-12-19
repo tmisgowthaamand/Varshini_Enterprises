@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Heart, 
-  Users, 
-  Target, 
-  Award, 
-  Leaf, 
+import {
+  Heart,
+  Users,
+  Target,
+  Award,
+  Leaf,
   Shield,
   TrendingUp,
   MapPin,
@@ -119,7 +119,7 @@ const AboutUs = () => {
               <span className="block text-white/90">Quality Hygiene Products</span>
             </h1>
             <p className="font-inter text-xl text-white/80 mb-8 max-w-3xl mx-auto">
-              Founded with a vision to make menstrual hygiene accessible and affordable for every woman, 
+              Founded with a vision to make menstrual hygiene accessible and affordable for every woman,
               we're committed to breaking barriers and promoting women's health across India.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -153,9 +153,9 @@ const AboutUs = () => {
               </CardHeader>
               <CardContent>
                 <p className="font-inter text-muted-foreground text-lg leading-relaxed">
-                  To provide affordable, high-quality menstrual hygiene products to every woman in India, 
-                  while promoting awareness and breaking the stigma around menstruation. We believe that 
-                  no woman should compromise her health, education, or dreams due to lack of access to 
+                  To provide affordable, high-quality menstrual hygiene products to every woman in India,
+                  while promoting awareness and breaking the stigma around menstruation. We believe that
+                  no woman should compromise her health, education, or dreams due to lack of access to
                   proper menstrual care.
                 </p>
               </CardContent>
@@ -170,9 +170,9 @@ const AboutUs = () => {
               </CardHeader>
               <CardContent>
                 <p className="font-inter text-muted-foreground text-lg leading-relaxed">
-                  A world where every woman has access to safe, sustainable menstrual products and 
-                  comprehensive menstrual health education. We envision communities where menstruation 
-                  is discussed openly, without shame or stigma, and where women's health is prioritized 
+                  A world where every woman has access to safe, sustainable menstrual products and
+                  comprehensive menstrual health education. We envision communities where menstruation
+                  is discussed openly, without shame or stigma, and where women's health is prioritized
                   at every level of society.
                 </p>
               </CardContent>
@@ -354,7 +354,7 @@ const AboutUs = () => {
                 <Phone className="w-8 h-8 text-primary mx-auto mb-4" />
                 <h3 className="font-nunito font-semibold text-foreground mb-2">Call Us</h3>
                 <p className="font-inter text-muted-foreground text-sm">
-                  +91 98765 43210<br />
+                  +91 91762 54234<br />
                   Mon-Sat: 9AM-6PM
                 </p>
               </CardContent>
@@ -365,7 +365,7 @@ const AboutUs = () => {
                 <Mail className="w-8 h-8 text-primary mx-auto mb-4" />
                 <h3 className="font-nunito font-semibold text-foreground mb-2">Email Us</h3>
                 <p className="font-inter text-muted-foreground text-sm">
-                  varshinienterprises29@gmail.com<br />
+                  varshinienterprises099@gmail.com<br />
                   We reply within 24 hours
                 </p>
               </CardContent>

@@ -243,7 +243,7 @@ const ShippingPolicy = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <Mail className="w-4 h-4 text-primary" />
-                    <span className="font-inter text-muted-foreground">Email: varshinienterprises29@gmail.com</span>
+                    <span className="font-inter text-muted-foreground">Email: varshinienterprises099@gmail.com</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Headphones className="w-4 h-4 text-primary" />

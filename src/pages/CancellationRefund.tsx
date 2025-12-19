@@ -66,7 +66,7 @@ const CancellationRefund = () => {
                     Provided they have not yet been processed, packed, or dispatched.
                   </p>
                 </div>
-                
+
                 <ul className="list-disc list-inside space-y-2 font-inter text-muted-foreground ml-4">
                   <li>Once an order has been shipped or prepared for dispatch, cancellations will no longer be possible.</li>
                   <li>To request cancellation, please provide your Order ID and reason for cancellation via email or phone.</li>
@@ -174,7 +174,7 @@ const CancellationRefund = () => {
                 <p className="font-inter text-muted-foreground">
                   Once a return or issue is verified, refunds are initiated within 3–5 business days.
                 </p>
-                
+
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-3">
                     <div className="flex items-center space-x-3 p-3 bg-muted rounded-lg">
@@ -257,7 +257,7 @@ const CancellationRefund = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <Mail className="w-4 h-4 text-primary" />
-                    <span className="font-inter text-muted-foreground">Email: varshinienterprises29@gmail.com</span>
+                    <span className="font-inter text-muted-foreground">Email: varshinienterprises099@gmail.com</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Headphones className="w-4 h-4 text-primary" />

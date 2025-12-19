@@ -7,8 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import ProductCard from '@/components/ProductCard';
 import ScrollToTop from '@/components/ScrollToTop';
 import heroImage from '@/assets/hero-woman.jpg';
-import sanitaryPadsImage from '@/assets/product-sanitary-pads.jpg';
-import hygienePadsImage from '@/assets/product-hygiene-pads.jpg';
+import sanitaryPadsImage from '@/assets/product-sanitary-pads.png';
+import hygienePadsImage from '@/assets/product-hygiene-pads.png';
 
 const Homepage = () => {
   // Sample product data
@@ -24,7 +24,7 @@ const Homepage = () => {
       isCertified: true,
     },
     {
-      id: '2', 
+      id: '2',
       name: 'Organic Cotton Hygiene Pads',
       price: 55,
       originalPrice: 70,
@@ -54,7 +54,7 @@ const Homepage = () => {
     },
     {
       name: 'Dr. Meera Nair',
-      location: 'NGO Director, Kochi',  
+      location: 'NGO Director, Kochi',
       text: 'We distribute these products in rural areas. The quality is excellent and women trust this brand.',
       rating: 5,
     },
@@ -89,7 +89,7 @@ const Homepage = () => {
                   Premium quality, eco-friendly sanitary napkins and hygiene pads made accessible for all women across India. Because every woman deserves comfort and confidence.
                 </p>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" asChild className="bg-white text-gray-900 hover:bg-gray-100 font-bold shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-white">
                   <Link to="/products" className="text-gray-900 font-bold">
@@ -97,12 +97,7 @@ const Homepage = () => {
                     Buy Now
                   </Link>
                 </Button>
-                <Button size="lg" asChild className="bg-white text-gray-900 hover:bg-gray-100 font-bold shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-white">
-                  <Link to="/partner" className="text-gray-900 font-bold">
-                    <Users className="w-5 h-5 mr-2 text-gray-900" />
-                    Partner With Us
-                  </Link>
-                </Button>
+
               </div>
 
               {/* Trust Indicators */}
@@ -132,7 +127,7 @@ const Homepage = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
               </div>
-              
+
               {/* Floating Stats */}
               <div className="absolute -bottom-6 -left-6 bg-white rounded-xl p-4 shadow-hover">
                 <div className="text-center">
@@ -140,7 +135,7 @@ const Homepage = () => {
                   <div className="font-inter text-sm text-muted-foreground">NGO Partners</div>
                 </div>
               </div>
-              
+
               <div className="absolute -top-6 -right-6 bg-white rounded-xl p-4 shadow-hover">
                 <div className="text-center">
                   <div className="font-nunito font-bold text-2xl text-success">100%</div>
@@ -238,7 +233,7 @@ const Homepage = () => {
               </Link>
             </Button>
           </div>
-        </div>  
+        </div>
       </section>
 
       {/* Awareness Section */}
@@ -265,14 +260,10 @@ const Homepage = () => {
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </Button>
-                <Button variant="outline" asChild>
-                  <Link to="/partner">
-                    Join Our Mission
-                  </Link>
-                </Button>
+
               </div>
             </div>
-            
+
             <div className="relative">
               <div className="bg-white rounded-2xl p-8 shadow-hover">
                 <div className="grid grid-cols-2 gap-6">
@@ -334,33 +325,7 @@ const Homepage = () => {
         </div>
       </section>
 
-      {/* Partner CTA Banner */}
-      <section className="py-16 bg-primary">
-        <div className="container mx-auto px-4 text-center">
-          <div className="max-w-3xl mx-auto space-y-6">
-            <h2 className="font-nunito font-bold text-3xl md:text-4xl text-white">
-              Join Us in Promoting Women's Health
-            </h2>
-            <p className="font-inter text-xl text-white/80">
-              Partner with us to distribute quality hygiene products in your community. Special rates for NGOs, schools, and bulk distributors.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary">
-                <Link to="/partner" className="flex items-center">
-                  <Users className="w-5 h-5 mr-2" />
-                  Become a Partner
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary">
-                <Link to="/contact" className="flex items-center">
-                  <Phone className="w-5 h-5 mr-2" />
-                  Contact Us
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* WhatsApp Sticky Button - Mobile */}
       <div className="fixed bottom-6 right-6 z-40">

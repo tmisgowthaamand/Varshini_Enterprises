@@ -15,7 +15,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="font-inter text-primary-foreground/80 mb-6 max-w-md">
-              Promoting women's health and dignity through affordable, eco-friendly hygiene products. 
+              Promoting women's health and dignity through affordable, eco-friendly hygiene products.
               Every woman deserves access to safe, quality menstrual care.
             </p>
             <div className="flex space-x-4">
@@ -38,8 +38,7 @@ const Footer = () => {
               {[
                 { name: 'About Us', href: '/about-us' },
                 { name: 'Our Products', href: '/products' },
-                { name: 'Partner With Us', href: '/partner' },
-                { name: 'Bulk Orders', href: '/partner' },
+
                 { name: 'Awareness', href: '/awareness' },
               ].map((link) => (
                 <li key={link.name}>
@@ -74,7 +73,13 @@ const Footer = () => {
               <li className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-primary-foreground/80" />
                 <span className="font-inter text-primary-foreground/80">
-                  varshinienterprises29@gmail.com
+                  varshinienterprises099@gmail.com
+                </span>
+              </li>
+              <li className="flex items-center space-x-3">
+                <Mail className="w-5 h-5 text-primary-foreground/80" />
+                <span className="font-inter text-primary-foreground/80">
+                  contact@varshinienterprises.shop
                 </span>
               </li>
             </ul>

@@ -62,6 +62,12 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
     pincode: '',
     landmark: '',
   });
+  const [paymentDetails, setPaymentDetails] = useState({
+    cardNumber: '',
+    expiry: '',
+    cvv: '',
+    upiId: '',
+  });
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
@@ -70,25 +76,19 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
   const paymentMethods = [
     {
-      id: 'debit-credit' as PaymentMethod,
-      name: 'Debit/Credit Card',
-      description: 'Secure payment with your card',
-      icon: CreditCard,
-      popular: true,
-    },
-    {
-      id: 'upi' as PaymentMethod,
-      name: 'UPI Payment',
-      description: 'Pay using UPI apps like GPay, PhonePe',
-      icon: Package,
-      popular: true,
-    },
-    {
       id: 'cash-on-delivery' as PaymentMethod,
       name: 'Cash on Delivery',
       description: 'Pay when your order arrives',
       icon: Package,
       popular: false,
+    },
+    {
+      id: 'debit-credit' as PaymentMethod,
+      name: 'Debit/Credit Card',
+      description: 'Secure payment with your card',
+      icon: CreditCard,
+      popular: true,
+      disabled: true,
     },
   ];
 
@@ -131,9 +131,13 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
     setCurrentStep('confirmation');
   };
 
+  const handlePaymentDetailsChange = (field: string, value: string) => {
+    setPaymentDetails(prev => ({ ...prev, [field]: value }));
+  };
+
   const handleOrderConfirm = async () => {
     setIsProcessing(true);
-    
+
     // Simulate order processing
     setTimeout(() => {
       const orderId = generateOrderId();
@@ -145,18 +149,18 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
         paymentMethod: selectedPaymentMethod!,
         estimatedDelivery: getEstimatedDelivery(),
       };
-      
+
       setOrderDetails(order);
       setCurrentStep('success');
       setIsProcessing(false);
-      
+
       toast({
         title: "Order Placed Successfully!",
         description: `Your order ${orderId} has been confirmed.`,
       });
-      
+
       onOrderComplete(orderId);
-      
+
       // Redirect to order confirmation page
       setTimeout(() => {
         navigate(`/order-confirmation?orderId=${orderId}`);
@@ -190,11 +194,10 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
               <div className="flex items-center space-x-2 mt-2">
                 {['address', 'payment', 'confirmation', 'success'].map((step, index) => (
                   <div key={step} className="flex items-center">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                      currentStep === step || (index < ['address', 'payment', 'confirmation', 'success'].indexOf(currentStep))
-                        ? 'bg-primary text-white'
-                        : 'bg-muted text-muted-foreground'
-                    }`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${currentStep === step || (index < ['address', 'payment', 'confirmation', 'success'].indexOf(currentStep))
+                      ? 'bg-primary text-white'
+                      : 'bg-muted text-muted-foreground'
+                      }`}>
                       {index + 1}
                     </div>
                     {index < 3 && <div className="w-8 h-0.5 bg-muted mx-2" />}
@@ -216,7 +219,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   <MapPin className="w-5 h-5 mr-2 text-primary" />
                   Shipping Address
                 </h3>
-                
+
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="fullName">Full Name *</Label>
@@ -334,21 +337,22 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 {paymentMethods.map((method) => {
                   const Icon = method.icon;
                   const isSelected = selectedPaymentMethod === method.id;
-                  
+                  const isDisabled = method.disabled;
+
                   return (
                     <div
                       key={method.id}
-                      onClick={() => handlePaymentSelect(method.id)}
-                      className={`relative p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                        isSelected
-                          ? 'border-primary bg-primary/5'
-                          : 'border-border hover:border-primary/50'
-                      }`}
+                      onClick={() => !isDisabled && handlePaymentSelect(method.id)}
+                      className={`relative p-4 border-2 rounded-lg transition-all ${isDisabled
+                        ? 'opacity-50 cursor-not-allowed border-muted bg-muted/20'
+                        : isSelected
+                          ? 'border-primary bg-primary/5 cursor-pointer'
+                          : 'border-border hover:border-primary/50 cursor-pointer'
+                        }`}
                     >
                       <div className="flex items-center space-x-3">
-                        <div className={`p-2 rounded-full ${
-                          isSelected ? 'bg-primary text-white' : 'bg-muted'
-                        }`}>
+                        <div className={`p-2 rounded-full ${isSelected ? 'bg-primary text-white' : 'bg-muted'
+                          }`}>
                           <Icon className="w-5 h-5" />
                         </div>
                         <div className="flex-1">
@@ -375,12 +379,14 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 })}
               </div>
 
+
+
               <div className="flex space-x-4">
                 <Button variant="outline" onClick={() => setCurrentStep('address')} className="flex-1">
                   Back to Address
                 </Button>
-                <Button 
-                  onClick={handlePaymentConfirm} 
+                <Button
+                  onClick={handlePaymentConfirm}
                   disabled={!selectedPaymentMethod}
                   className="flex-1"
                 >
@@ -462,8 +468,8 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <Button variant="outline" onClick={() => setCurrentStep('payment')} className="flex-1">
                   Back to Payment
                 </Button>
-                <Button 
-                  onClick={handleOrderConfirm} 
+                <Button
+                  onClick={handleOrderConfirm}
                   disabled={isProcessing}
                   className="flex-1"
                   size="lg"
@@ -486,7 +492,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
               <div className="flex justify-center">
                 <CheckCircle className="w-16 h-16 text-success" />
               </div>
-              
+
               <div>
                 <h3 className="font-nunito font-bold text-2xl text-foreground mb-2">
                   Order Placed Successfully!
@@ -513,7 +519,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                         <Copy className="w-4 h-4" />
                       </Button>
                     </div>
-                    
+
                     <div className="text-sm text-muted-foreground">
                       <p>Estimated Delivery: <strong>{orderDetails.estimatedDelivery}</strong></p>
                       <p>Payment Method: <strong>{paymentMethods.find(m => m.id === orderDetails.paymentMethod)?.name}</strong></p>
