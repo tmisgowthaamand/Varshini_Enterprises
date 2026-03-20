@@ -13,6 +13,11 @@ const {
   PAYTM_STATUS_URL
 } = process.env;
 
+// Validate merchant key length (should be 32 characters for AES-256)
+if (!PAYTM_MERCHANT_KEY || PAYTM_MERCHANT_KEY.length !== 32) {
+  console.error('Invalid Merchant Key length. Expected 32 characters, got:', PAYTM_MERCHANT_KEY?.length);
+}
+
 // Initiate payment
 router.post('/initiate', async (req, res) => {
   try {
@@ -31,7 +36,8 @@ router.post('/initiate', async (req, res) => {
       merchantId: PAYTM_MERCHANT_ID,
       website: PAYTM_WEBSITE,
       callbackUrl: PAYTM_CALLBACK_URL,
-      transactionUrl: PAYTM_TRANSACTION_URL
+      transactionUrl: PAYTM_TRANSACTION_URL,
+      merchantKeyLength: PAYTM_MERCHANT_KEY?.length
     });
 
     const paytmParams = {

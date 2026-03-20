@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, MapPin, Package, CheckCircle, AlertCircle, Copy } from 'lucide-react';
+import { X, MapPin, Package, CheckCircle, AlertCircle, Copy, CreditCard, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,6 +11,8 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { PaymentMethod } from '@/contexts/CartContext';
+
+const BACKEND_URL = 'https://varshini-enterprises-gqnz.onrender.com';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -62,13 +64,20 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
     pincode: '',
     landmark: '',
   });
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>('cash-on-delivery' as PaymentMethod);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
   const paymentMethods = [
+    {
+      id: 'paytm' as PaymentMethod,
+      name: 'Pay with Paytm',
+      description: 'Credit/Debit Card, UPI, Net Banking',
+      icon: CreditCard,
+      popular: true,
+    },
     {
       id: 'cash-on-delivery' as PaymentMethod,
       name: 'Cash on Delivery',
@@ -121,7 +130,64 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const handleOrderConfirm = async () => {
     setIsProcessing(true);
 
-    // Simulate order processing
+    // If Paytm payment is selected, initiate payment
+    if (selectedPaymentMethod === 'paytm') {
+      try {
+        const orderId = generateOrderId();
+        const customerId = `CUST_${Date.now()}`;
+        
+        const response = await fetch(`${BACKEND_URL}/api/payment/initiate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            orderId,
+            amount: total.toFixed(2),
+            customerId,
+            customerEmail: shippingAddress.email,
+            customerPhone: shippingAddress.phone
+          }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          // Create form and submit to Paytm
+          const form = document.createElement('form');
+          form.method = 'POST';
+          form.action = data.data.transactionUrl;
+          
+          const bodyInput = document.createElement('input');
+          bodyInput.type = 'hidden';
+          bodyInput.name = 'body';
+          bodyInput.value = JSON.stringify(data.data.paytmParams.body);
+          form.appendChild(bodyInput);
+
+          const headInput = document.createElement('input');
+          headInput.type = 'hidden';
+          headInput.name = 'head';
+          headInput.value = JSON.stringify(data.data.paytmParams.head);
+          form.appendChild(headInput);
+
+          document.body.appendChild(form);
+          form.submit();
+        } else {
+          throw new Error(data.message || 'Payment initiation failed');
+        }
+      } catch (error) {
+        console.error('Payment error:', error);
+        toast({
+          title: "Payment Failed",
+          description: error instanceof Error ? error.message : "Unable to process payment. Please try again.",
+          variant: "destructive",
+        });
+        setIsProcessing(false);
+      }
+      return;
+    }
+
+    // For COD, process order normally
     setTimeout(() => {
       const orderId = generateOrderId();
       const order: OrderDetails = {
@@ -320,10 +386,22 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     return (
                       <div
                         key={method.id}
-                        className="relative p-6 border-2 rounded-xl transition-all border-primary bg-primary/5 cursor-default"
+                        onClick={() => handlePaymentSelect(method.id)}
+                        className={`relative p-6 border-2 rounded-xl transition-all cursor-pointer hover:shadow-md ${
+                          isSelected
+                            ? 'border-primary bg-primary/5'
+                            : 'border-muted hover:border-primary/50'
+                        }`}
                       >
+                        {method.popular && (
+                          <Badge className="absolute -top-2 -right-2 bg-success">
+                            Recommended
+                          </Badge>
+                        )}
                         <div className="flex items-center space-x-4">
-                          <div className="p-3 rounded-full bg-primary text-white">
+                          <div className={`p-3 rounded-full ${
+                            isSelected ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'
+                          }`}>
                             <Icon className="w-6 h-6" />
                           </div>
                           <div className="flex-1">
@@ -336,7 +414,7 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                               {method.description}
                             </p>
                           </div>
-                          <CheckCircle className="w-6 h-6 text-primary" />
+                          {isSelected && <CheckCircle className="w-6 h-6 text-primary" />}
                         </div>
                       </div>
                     );
@@ -441,9 +519,11 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 >
                   {isProcessing ? (
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <Loader2 className="w-4 h-4 animate-spin" />
                       <span>Processing...</span>
                     </div>
+                  ) : selectedPaymentMethod === 'paytm' ? (
+                    'Proceed to Payment'
                   ) : (
                     'Confirm Order'
                   )}
