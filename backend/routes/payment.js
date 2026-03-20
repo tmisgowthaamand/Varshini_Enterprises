@@ -39,7 +39,7 @@ router.post('/initiate', async (req, res) => {
       merchantKeyLength: PAYTM_MERCHANT_KEY?.length
     });
 
-    // Build Paytm parameters for form submission - WITHOUT CHECKSUMHASH initially
+    // Build Paytm parameters for form submission
     const paytmParams = {
       MID: PAYTM_MERCHANT_ID,
       WEBSITE: PAYTM_WEBSITE,
@@ -55,18 +55,17 @@ router.post('/initiate', async (req, res) => {
 
     console.log('Paytm Parameters:', paytmParams);
 
-    // Generate checksum - try with object directly
-    let checksum;
-    try {
-      // Method 1: Pass object directly to generateSignature
-      checksum = await PaytmChecksum.generateSignature(
-        JSON.stringify(paytmParams),
-        PAYTM_MERCHANT_KEY
-      );
-    } catch (checksumError) {
-      console.error('Checksum generation error:', checksumError);
-      throw checksumError;
-    }
+    // Generate checksum using pipe-separated format (traditional Paytm way)
+    // Format: MID|ORDER_ID|CUST_ID|TXN_AMOUNT|WEBSITE|CHANNEL_ID|INDUSTRY_TYPE_ID|EMAIL|MOBILE_NO|CALLBACK_URL
+    const checksumString = `${paytmParams.MID}|${paytmParams.ORDER_ID}|${paytmParams.CUST_ID}|${paytmParams.TXN_AMOUNT}|${paytmParams.WEBSITE}|${paytmParams.CHANNEL_ID}|${paytmParams.INDUSTRY_TYPE_ID}|${paytmParams.EMAIL}|${paytmParams.MOBILE_NO}|${paytmParams.CALLBACK_URL}`;
+
+    console.log('Checksum String:', checksumString);
+
+    // Generate checksum from pipe-separated string
+    const checksum = await PaytmChecksum.generateSignature(
+      checksumString,
+      PAYTM_MERCHANT_KEY
+    );
 
     console.log('Generated Checksum:', checksum);
 
