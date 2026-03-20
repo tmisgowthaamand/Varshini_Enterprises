@@ -39,35 +39,84 @@ router.post('/initiate', async (req, res) => {
     });
 
     const paytmParams = {
-      MID: PAYTM_MERCHANT_ID,
-      WEBSITE: PAYTM_WEBSITE,
-      INDUSTRY_TYPE_ID: PAYTM_INDUSTRY_TYPE,
-      CHANNEL_ID: PAYTM_CHANNEL_ID_WEB,
-      ORDER_ID: orderId,
-      CUST_ID: customerId,
-      TXN_AMOUNT: amount.toString(),
-      CALLBACK_URL: PAYTM_CALLBACK_URL,
-      EMAIL: customerEmail || '',
-      MOBILE_NO: customerPhone || ''
+      body: {
+        requestType: 'Payment',
+        mid: PAYTM_MERCHANT_ID,
+        websiteName: PAYTM_WEBSITE,
+        orderId: orderId,
+        callbackUrl: PAYTM_CALLBACK_URL,
+        txnAmount: {
+          value: amount.toString(),
+          currency: 'INR'
+        },
+        userInfo: {
+          custId: customerId,
+          email: customerEmail || '',
+          mobile: customerPhone || ''
+        }
+      }
     };
 
     const checksum = await PaytmChecksum.generateSignature(
-      paytmParams,
+      JSON.stringify(paytmParams.body),
       PAYTM_MERCHANT_KEY
     );
 
-    paytmParams.CHECKSUMHASH = checksum;
+    paytmParams.head = {
+      signature: checksum
+    };
 
-    console.log('Payment initiated successfully for order:', orderId);
+    // Make server-to-server request to initTransaction
+    const https = require('https');
+    const postData = JSON.stringify(paytmParams);
+    
+    // Switch to initTransaction API endpoint
+    const hostname = 'securegw.paytm.in';
+    const initPath = `/theia/api/v1/initTransaction?mid=${PAYTM_MERCHANT_ID}&orderId=${orderId}`;
 
-    res.json({
-      success: true,
-      data: {
-        paytmParams,
-        transactionUrl: PAYTM_TRANSACTION_URL,
-        orderId
+    const options = {
+      hostname: hostname,
+      port: 443,
+      path: initPath,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': postData.length
       }
+    };
+
+    let txnToken = '';
+
+    const request = https.request(options, (response) => {
+      let data = '';
+      response.on('data', (chunk) => {
+        data += chunk;
+      });
+      response.on('end', () => {
+        const result = JSON.parse(data);
+        if (result.body && result.body.txnToken) {
+          txnToken = result.body.txnToken;
+          res.json({
+            success: true,
+            data: {
+              txnToken,
+              orderId,
+              mid: PAYTM_MERCHANT_ID,
+              transactionUrl: `https://${hostname}/theia/api/v1/showPaymentPage?mid=${PAYTM_MERCHANT_ID}&orderId=${orderId}`
+            }
+          });
+        } else {
+          res.status(400).json({ success: false, message: 'Failed to generate txnToken', result });
+        }
+      });
     });
+
+    request.on('error', (error) => {
+      res.status(500).json({ success: false, message: 'initTransaction failed', error: error.message });
+    });
+
+    request.write(postData);
+    request.end();
   } catch (error) {
     console.error('Payment initiation error:', error);
     res.status(500).json({ 
@@ -139,24 +188,31 @@ router.post('/status', async (req, res) => {
     }
 
     const paytmParams = {
-      MID: PAYTM_MERCHANT_ID,
-      ORDERID: orderId
+      body: {
+        mid: PAYTM_MERCHANT_ID,
+        orderId: orderId
+      }
     };
 
     const checksum = await PaytmChecksum.generateSignature(
-      paytmParams,
+      JSON.stringify(paytmParams.body),
       PAYTM_MERCHANT_KEY
     );
 
-    paytmParams.CHECKSUMHASH = checksum;
+    paytmParams.head = {
+      signature: checksum
+    };
 
     const https = require('https');
     const postData = JSON.stringify(paytmParams);
 
+    const hostname = 'securegw.paytm.in';
+    const statusPath = '/v3/order/status';
+
     const options = {
-      hostname: new URL(PAYTM_STATUS_URL).hostname,
+      hostname: hostname,
       port: 443,
-      path: new URL(PAYTM_STATUS_URL).pathname,
+      path: statusPath,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

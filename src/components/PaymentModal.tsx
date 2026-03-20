@@ -55,11 +55,17 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
         form.method = 'POST';
         form.action = data.data.transactionUrl;
         
-        Object.keys(data.data.paytmParams).forEach((key) => {
+        const params = {
+          mid: data.data.mid,
+          orderId: data.data.orderId,
+          txnToken: data.data.txnToken
+        };
+
+        Object.keys(params).forEach((key) => {
           const input = document.createElement('input');
           input.type = 'hidden';
           input.name = key;
-          input.value = data.data.paytmParams[key];
+          input.value = params[key as keyof typeof params];
           form.appendChild(input);
         });
 
