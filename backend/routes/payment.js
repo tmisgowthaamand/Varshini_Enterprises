@@ -17,11 +17,37 @@ const {
 console.log('Merchant Key length:', PAYTM_MERCHANT_KEY?.length);
 console.log('Merchant ID:', PAYTM_MERCHANT_ID);
 console.log('Website:', PAYTM_WEBSITE);
+console.log('Merchant Key (raw):', JSON.stringify(PAYTM_MERCHANT_KEY));
+
+// Test checksum endpoint for debugging
+router.get('/test-checksum', async (req, res) => {
+  try {
+    const testString = 'WtByJK14940032907936|TEST123|CUST123|100.00|DEFAULT|WEB|Retail|test@example.com|9999999999|https://varshini-enterprises-gqnz.onrender.com/api/payment/callback';
+
+    console.log('Test Checksum String:', testString);
+    console.log('Using Merchant Key:', PAYTM_MERCHANT_KEY);
+
+    const checksum = await PaytmChecksum.generateSignature(
+      testString,
+      PAYTM_MERCHANT_KEY
+    );
+
+    res.json({
+      testString,
+      merchantKey: PAYTM_MERCHANT_KEY,
+      merchantKeyLength: PAYTM_MERCHANT_KEY?.length,
+      checksum
+    });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+});
 
 // Initiate payment - Traditional Paytm form flow
 router.post('/initiate', async (req, res) => {
   try {
-    console.log('Payment initiation request:', req.body);
+    console.log('========== PAYMENT INITIATION START ==========');
+    console.log('Payment request:', req.body);
 
     const { orderId, amount, customerId, customerEmail, customerPhone } = req.body;
 
@@ -31,13 +57,6 @@ router.post('/initiate', async (req, res) => {
         message: 'Missing required fields'
       });
     }
-
-    console.log('Paytm Config:', {
-      merchantId: PAYTM_MERCHANT_ID,
-      website: PAYTM_WEBSITE,
-      callbackUrl: PAYTM_CALLBACK_URL,
-      merchantKeyLength: PAYTM_MERCHANT_KEY?.length
-    });
 
     // Build Paytm parameters for form submission
     const paytmParams = {
@@ -53,24 +72,51 @@ router.post('/initiate', async (req, res) => {
       CALLBACK_URL: PAYTM_CALLBACK_URL
     };
 
-    console.log('Paytm Parameters:', paytmParams);
+    console.log('Parameters:', JSON.stringify(paytmParams, null, 2));
+    console.log('Merchant Key (length):', PAYTM_MERCHANT_KEY?.length);
+    console.log('Merchant Key (repr):', JSON.stringify(PAYTM_MERCHANT_KEY));
 
-    // Generate checksum using pipe-separated format (traditional Paytm way)
-    // Format: MID|ORDER_ID|CUST_ID|TXN_AMOUNT|WEBSITE|CHANNEL_ID|INDUSTRY_TYPE_ID|EMAIL|MOBILE_NO|CALLBACK_URL
-    const checksumString = `${paytmParams.MID}|${paytmParams.ORDER_ID}|${paytmParams.CUST_ID}|${paytmParams.TXN_AMOUNT}|${paytmParams.WEBSITE}|${paytmParams.CHANNEL_ID}|${paytmParams.INDUSTRY_TYPE_ID}|${paytmParams.EMAIL}|${paytmParams.MOBILE_NO}|${paytmParams.CALLBACK_URL}`;
+    // Try Method 1: Object passed directly
+    console.log('\n--- Trying Method 1: Object directly ---');
+    let checksum;
+    try {
+      checksum = await PaytmChecksum.generateSignature(
+        paytmParams,
+        PAYTM_MERCHANT_KEY
+      );
+      console.log('✓ Method 1 SUCCESS - Checksum:', checksum.substring(0, 30) + '...');
+    } catch (e1) {
+      console.log('✗ Method 1 failed:', e1.message);
 
-    console.log('Checksum String:', checksumString);
+      // Try Method 2: JSON stringify
+      console.log('\n--- Trying Method 2: JSON.stringify ---');
+      try {
+        const jsonStr = JSON.stringify(paytmParams);
+        checksum = await PaytmChecksum.generateSignature(
+          jsonStr,
+          PAYTM_MERCHANT_KEY
+        );
+        console.log('✓ Method 2 SUCCESS - Checksum:', checksum.substring(0, 30) + '...');
+      } catch (e2) {
+        console.log('✗ Method 2 failed:', e2.message);
+        throw new Error('All checksum methods failed: ' + e1.message);
+      }
+    }
 
-    // Generate checksum from pipe-separated string
-    const checksum = await PaytmChecksum.generateSignature(
-      checksumString,
-      PAYTM_MERCHANT_KEY
-    );
-
-    console.log('Generated Checksum:', checksum);
-
-    // Add the checksum to the params
+    // Add checksum to params
     paytmParams.CHECKSUMHASH = checksum;
+
+    console.log('\nFinal Paytm Parameters:');
+    Object.keys(paytmParams).forEach(key => {
+      const value = paytmParams[key];
+      if (key === 'CHECKSUMHASH') {
+        console.log(`  ${key}: ${value.substring(0, 30)}...`);
+      } else {
+        console.log(`  ${key}: ${value}`);
+      }
+    });
+
+    console.log('========== PAYMENT INITIATION SUCCESS ==========\n');
 
     // Return parameters for frontend form submission
     res.json({
@@ -81,10 +127,14 @@ router.post('/initiate', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Payment initiation error:', error);
+    console.error('========== PAYMENT INITIATION ERROR ==========');
+    console.error('Error:', error.message);
+    console.error('Stack:', error.stack);
+    console.error('=========================================\n');
+
     res.status(500).json({
       success: false,
-      message: 'Payment initiation failed',
+      message: 'Payment initiation failed: ' + error.message,
       error: error.message
     });
   }
