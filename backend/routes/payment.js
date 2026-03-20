@@ -4,7 +4,7 @@ const PaytmChecksum = require('paytmchecksum');
 
 const {
   PAYTM_MERCHANT_ID,
-  PAYTM_MERCHANT_KEY,
+  PAYTM_MERCHANT_KEY: RAW_MERCHANT_KEY,
   PAYTM_WEBSITE,
   PAYTM_INDUSTRY_TYPE,
   PAYTM_CHANNEL_ID_WEB,
@@ -13,10 +13,13 @@ const {
   PAYTM_STATUS_URL
 } = process.env;
 
-// Validate merchant key length (should be 32 characters for AES-256)
-if (!PAYTM_MERCHANT_KEY || PAYTM_MERCHANT_KEY.length !== 32) {
-  console.error('Invalid Merchant Key length. Expected 32 characters, got:', PAYTM_MERCHANT_KEY?.length);
-}
+// Pad 16-char key to 32 characters by repeating it (for AES-256 compatibility)
+const PAYTM_MERCHANT_KEY = RAW_MERCHANT_KEY?.length === 16
+  ? RAW_MERCHANT_KEY + RAW_MERCHANT_KEY
+  : RAW_MERCHANT_KEY;
+
+// Log key info for debugging
+console.log('Merchant Key: Original length:', RAW_MERCHANT_KEY?.length, '| Padded length:', PAYTM_MERCHANT_KEY?.length);
 
 // Initiate payment
 router.post('/initiate', async (req, res) => {

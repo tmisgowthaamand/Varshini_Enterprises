@@ -24,8 +24,8 @@ services:
       - key: PAYTM_CALLBACK_URL
         sync: false
       - key: PAYTM_TRANSACTION_URL
-        value: https://securegw-stage.paytm.in/order/process
+        value: https://securegw.paytm.in/order/process
       - key: PAYTM_STATUS_URL
-        value: https://securegw-stage.paytm.in/order/status
+        value: https://securegw.paytm.in/order/status
       - key: PORT
         value: 3000
