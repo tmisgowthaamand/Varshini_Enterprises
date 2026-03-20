@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const PaytmChecksum = require('paytmchecksum');
+const axios = require('axios');
 
 const {
   PAYTM_MERCHANT_ID,
@@ -15,18 +16,20 @@ const {
 
 // Log key info for debugging
 console.log('Merchant Key length:', PAYTM_MERCHANT_KEY?.length);
+console.log('Merchant ID:', PAYTM_MERCHANT_ID);
+console.log('Website:', PAYTM_WEBSITE);
 
 // Initiate payment
 router.post('/initiate', async (req, res) => {
   try {
     console.log('Payment initiation request:', req.body);
-    
+
     const { orderId, amount, customerId, customerEmail, customerPhone } = req.body;
 
     if (!orderId || !amount || !customerId) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'Missing required fields' 
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields'
       });
     }
 
@@ -66,11 +69,13 @@ router.post('/initiate', async (req, res) => {
       signature: checksum
     };
 
-    // Make server-to-server request to initTransaction
+    console.log('Generated Checksum:', checksum);
+
+    // Make server-to-server request using https
     const https = require('https');
     const postData = JSON.stringify(paytmParams);
-    
-    // Switch to initTransaction API endpoint
+    const postDataBuffer = Buffer.from(postData, 'utf8');
+
     const hostname = 'securegw.paytm.in';
     const initPath = `/theia/api/v1/initTransaction?mid=${PAYTM_MERCHANT_ID}&orderId=${orderId}`;
 
@@ -81,48 +86,90 @@ router.post('/initiate', async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Content-Length': postData.length
+        'Content-Length': postDataBuffer.length
       }
     };
 
-    let txnToken = '';
+    return new Promise((resolve) => {
+      const request = https.request(options, (response) => {
+        let data = '';
+        response.on('data', (chunk) => {
+          data += chunk;
+        });
+        response.on('end', () => {
+          try {
+            console.log('Paytm API Response Status:', response.statusCode);
+            console.log('Paytm API Response (first 500 chars):', data.substring(0, 500));
 
-    const request = https.request(options, (response) => {
-      let data = '';
-      response.on('data', (chunk) => {
-        data += chunk;
-      });
-      response.on('end', () => {
-        const result = JSON.parse(data);
-        if (result.body && result.body.txnToken) {
-          txnToken = result.body.txnToken;
-          res.json({
-            success: true,
-            data: {
-              txnToken,
-              orderId,
-              mid: PAYTM_MERCHANT_ID,
-              transactionUrl: `https://${hostname}/theia/api/v1/showPaymentPage?mid=${PAYTM_MERCHANT_ID}&orderId=${orderId}`
+            // Check if response is HTML (error page)
+            if (data.startsWith('<!DOCTYPE') || data.startsWith('<html')) {
+              console.error('Paytm returned HTML error page. Status:', response.statusCode);
+              console.error('Full response:', data);
+              resolve();
+              return res.status(response.statusCode || 400).json({
+                success: false,
+                message: 'Paytm API error: Check merchant ID, key, and account status',
+                statusCode: response.statusCode,
+                hint: 'Verify merchant credentials and that your Paytm account is properly configured'
+              });
             }
-          });
-        } else {
-          res.status(400).json({ success: false, message: 'Failed to generate txnToken', result });
-        }
+
+            const result = JSON.parse(data);
+            console.log('Parsed Paytm response:', JSON.stringify(result).substring(0, 200));
+
+            if (result.body && result.body.txnToken) {
+              const txnToken = result.body.txnToken;
+              resolve();
+              return res.json({
+                success: true,
+                data: {
+                  txnToken,
+                  orderId,
+                  mid: PAYTM_MERCHANT_ID,
+                  transactionUrl: `https://${hostname}/theia/api/v1/showPaymentPage?mid=${PAYTM_MERCHANT_ID}&orderId=${orderId}`
+                }
+              });
+            } else {
+              console.error('No txnToken in response:', result);
+              resolve();
+              return res.status(400).json({
+                success: false,
+                message: 'Failed to generate transaction token',
+                details: result.body || result
+              });
+            }
+          } catch (parseError) {
+            console.error('JSON Parse Error:', parseError.message);
+            console.error('Response data:', data);
+            resolve();
+            return res.status(500).json({
+              success: false,
+              message: 'Failed to parse Paytm response - invalid response format',
+              error: parseError.message
+            });
+          }
+        });
       });
-    });
 
-    request.on('error', (error) => {
-      res.status(500).json({ success: false, message: 'initTransaction failed', error: error.message });
-    });
+      request.on('error', (error) => {
+        console.error('HTTPS Request Error:', error);
+        resolve();
+        res.status(500).json({
+          success: false,
+          message: 'Failed to connect to Paytm',
+          error: error.message
+        });
+      });
 
-    request.write(postData);
-    request.end();
+      request.write(postDataBuffer);
+      request.end();
+    });
   } catch (error) {
     console.error('Payment initiation error:', error);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       message: 'Payment initiation failed',
-      error: error.message 
+      error: error.message
     });
   }
 });
