@@ -16,6 +16,8 @@ const {
 // Initiate payment
 router.post('/initiate', async (req, res) => {
   try {
+    console.log('Payment initiation request:', req.body);
+    
     const { orderId, amount, customerId, customerEmail, customerPhone } = req.body;
 
     if (!orderId || !amount || !customerId) {
@@ -24,6 +26,13 @@ router.post('/initiate', async (req, res) => {
         message: 'Missing required fields' 
       });
     }
+
+    console.log('Paytm Config:', {
+      merchantId: PAYTM_MERCHANT_ID,
+      website: PAYTM_WEBSITE,
+      callbackUrl: PAYTM_CALLBACK_URL,
+      transactionUrl: PAYTM_TRANSACTION_URL
+    });
 
     const paytmParams = {
       body: {
@@ -53,6 +62,8 @@ router.post('/initiate', async (req, res) => {
       signature: checksum
     };
 
+    console.log('Payment initiated successfully for order:', orderId);
+
     res.json({
       success: true,
       data: {
@@ -74,6 +85,8 @@ router.post('/initiate', async (req, res) => {
 // Payment callback
 router.post('/callback', async (req, res) => {
   try {
+    console.log('Payment callback received:', req.body);
+    
     const paytmChecksum = req.body.CHECKSUMHASH;
     delete req.body.CHECKSUMHASH;
 
@@ -85,12 +98,15 @@ router.post('/callback', async (req, res) => {
 
     if (isVerified) {
       const { ORDERID, TXNID, TXNAMOUNT, STATUS, RESPCODE, RESPMSG } = req.body;
+      
+      console.log('Payment verified:', { ORDERID, TXNID, STATUS, RESPCODE });
 
       // Redirect to frontend with payment status
       const redirectUrl = `https://varshinienterprises.vercel.app/order-confirmation?orderId=${ORDERID}&status=${STATUS}&txnId=${TXNID}&amount=${TXNAMOUNT}`;
       
       res.redirect(redirectUrl);
     } else {
+      console.error('Checksum verification failed');
       res.status(400).json({ 
         success: false, 
         message: 'Checksum verification failed' 
