@@ -87,7 +87,7 @@ router.post('/callback', async (req, res) => {
       const { ORDERID, TXNID, TXNAMOUNT, STATUS, RESPCODE, RESPMSG } = req.body;
 
       // Redirect to frontend with payment status
-      const redirectUrl = `${req.protocol}://${req.get('host').replace(':3000', ':5173')}/order-confirmation?orderId=${ORDERID}&status=${STATUS}&txnId=${TXNID}&amount=${TXNAMOUNT}`;
+      const redirectUrl = `https://varshinienterprises.vercel.app/order-confirmation?orderId=${ORDERID}&status=${STATUS}&txnId=${TXNID}&amount=${TXNAMOUNT}`;
       
       res.redirect(redirectUrl);
     } else {

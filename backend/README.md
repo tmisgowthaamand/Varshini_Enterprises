@@ -52,10 +52,12 @@ Check payment status
 6. Add these environment variables in Render dashboard:
    - `PAYTM_MERCHANT_ID`: WtByJK14940032907936
    - `PAYTM_MERCHANT_KEY`: L&J4_ezs5LC8T#tA
-   - `PAYTM_CALLBACK_URL`: https://your-app-name.onrender.com/api/payment/callback
+   - `PAYTM_CALLBACK_URL`: https://varshini-enterprises-gqnz.onrender.com/api/payment/callback
 
-7. Deploy and get your backend URL (e.g., https://payment-backend.onrender.com)
-8. Update `BACKEND_URL` in your frontend `PaymentModal.tsx` with this URL
+## Deployed URLs
+
+- Backend: https://varshini-enterprises-gqnz.onrender.com
+- Frontend: https://varshinienterprises.vercel.app
 
 ## Important Notes
 
