@@ -13,7 +13,7 @@ interface PaymentModalProps {
   itemCount: number;
 }
 
-const BACKEND_URL = 'http://localhost:3000';
+const BACKEND_URL = 'https://varshini-enterprises-gqnz.onrender.com';
 
 const PaymentModal: React.FC<PaymentModalProps> = ({
   isOpen,
