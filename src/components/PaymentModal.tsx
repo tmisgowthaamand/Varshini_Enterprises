@@ -13,7 +13,7 @@ interface PaymentModalProps {
   itemCount: number;
 }
 
-const BACKEND_URL = 'https://varshini-enterprises-gqnz.onrender.com';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://varshini-enterprises-gqnz.onrender.com';
 
 const PaymentModal: React.FC<PaymentModalProps> = ({
   isOpen,
@@ -55,17 +55,13 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
         form.method = 'POST';
         form.action = data.data.transactionUrl;
         
-        const bodyInput = document.createElement('input');
-        bodyInput.type = 'hidden';
-        bodyInput.name = 'body';
-        bodyInput.value = JSON.stringify(data.data.paytmParams.body);
-        form.appendChild(bodyInput);
-
-        const headInput = document.createElement('input');
-        headInput.type = 'hidden';
-        headInput.name = 'head';
-        headInput.value = JSON.stringify(data.data.paytmParams.head);
-        form.appendChild(headInput);
+        Object.keys(data.data.paytmParams).forEach((key) => {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = data.data.paytmParams[key];
+          form.appendChild(input);
+        });
 
         document.body.appendChild(form);
         form.submit();

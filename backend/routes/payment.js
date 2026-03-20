@@ -39,32 +39,24 @@ router.post('/initiate', async (req, res) => {
     });
 
     const paytmParams = {
-      body: {
-        requestType: 'Payment',
-        mid: PAYTM_MERCHANT_ID,
-        websiteName: PAYTM_WEBSITE,
-        orderId: orderId,
-        callbackUrl: PAYTM_CALLBACK_URL,
-        txnAmount: {
-          value: amount.toString(),
-          currency: 'INR'
-        },
-        userInfo: {
-          custId: customerId,
-          email: customerEmail || '',
-          mobile: customerPhone || ''
-        }
-      }
+      MID: PAYTM_MERCHANT_ID,
+      WEBSITE: PAYTM_WEBSITE,
+      INDUSTRY_TYPE_ID: PAYTM_INDUSTRY_TYPE,
+      CHANNEL_ID: PAYTM_CHANNEL_ID_WEB,
+      ORDER_ID: orderId,
+      CUST_ID: customerId,
+      TXN_AMOUNT: amount.toString(),
+      CALLBACK_URL: PAYTM_CALLBACK_URL,
+      EMAIL: customerEmail || '',
+      MOBILE_NO: customerPhone || ''
     };
 
     const checksum = await PaytmChecksum.generateSignature(
-      JSON.stringify(paytmParams.body),
+      paytmParams,
       PAYTM_MERCHANT_KEY
     );
 
-    paytmParams.head = {
-      signature: checksum
-    };
+    paytmParams.CHECKSUMHASH = checksum;
 
     console.log('Payment initiated successfully for order:', orderId);
 
@@ -139,20 +131,16 @@ router.post('/status', async (req, res) => {
     }
 
     const paytmParams = {
-      body: {
-        mid: PAYTM_MERCHANT_ID,
-        orderId: orderId
-      }
+      MID: PAYTM_MERCHANT_ID,
+      ORDERID: orderId
     };
 
     const checksum = await PaytmChecksum.generateSignature(
-      JSON.stringify(paytmParams.body),
+      paytmParams,
       PAYTM_MERCHANT_KEY
     );
 
-    paytmParams.head = {
-      signature: checksum
-    };
+    paytmParams.CHECKSUMHASH = checksum;
 
     const https = require('https');
     const postData = JSON.stringify(paytmParams);
