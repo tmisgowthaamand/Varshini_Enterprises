@@ -16,8 +16,11 @@ const OrderConfirmation = () => {
   const { toast } = useToast();
   const [orderDetails, setOrderDetails] = useState<any>(null);
 
-  // Get order ID from URL parameters
+  // Get order ID and payment status from URL parameters
   const orderId = searchParams.get('orderId') || 'VE' + Date.now().toString().slice(-8);
+  const paymentStatus = searchParams.get('status');
+  const txnId = searchParams.get('txnId');
+  const amount = searchParams.get('amount');
 
   useEffect(() => {
     // In a real app, you would fetch order details from API using orderId
@@ -25,7 +28,9 @@ const OrderConfirmation = () => {
     const mockOrderDetails = {
       orderId: orderId,
       orderDate: new Date().toISOString().split('T')[0],
-      status: 'confirmed',
+      status: paymentStatus === 'TXN_SUCCESS' ? 'confirmed' : 'pending',
+      paymentStatus: paymentStatus,
+      transactionId: txnId,
       estimatedDelivery: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString('en-IN', {
         weekday: 'long',
         year: 'numeric',
@@ -50,8 +55,8 @@ const OrderConfirmation = () => {
       ],
       subtotal: 145,
       shipping: 0,
-      total: 145,
-      paymentMethod: 'UPI Payment',
+      total: amount ? parseFloat(amount) : 145,
+      paymentMethod: 'Paytm Payment',
       shippingAddress: {
         name: 'John Doe',
         phone: '+91 98765 43210',
@@ -64,7 +69,7 @@ const OrderConfirmation = () => {
     };
 
     setOrderDetails(mockOrderDetails);
-  }, [orderId]);
+  }, [orderId, paymentStatus, txnId, amount]);
 
   const handleCopyOrderId = () => {
     navigator.clipboard.writeText(orderId);
@@ -103,16 +108,23 @@ const OrderConfirmation = () => {
         {/* Success Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
-            <div className="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center">
-              <CheckCircle className="w-12 h-12 text-success" />
+            <div className={`w-20 h-20 ${orderDetails.paymentStatus === 'TXN_SUCCESS' ? 'bg-success/10' : 'bg-warning/10'} rounded-full flex items-center justify-center`}>
+              <CheckCircle className={`w-12 h-12 ${orderDetails.paymentStatus === 'TXN_SUCCESS' ? 'text-success' : 'text-warning'}`} />
             </div>
           </div>
           <h1 className="font-nunito font-bold text-4xl text-foreground mb-4">
-            Order Confirmed!
+            {orderDetails.paymentStatus === 'TXN_SUCCESS' ? 'Order Confirmed!' : 'Payment Pending'}
           </h1>
           <p className="font-inter text-lg text-muted-foreground max-w-2xl mx-auto">
-            Thank you for your order. We've received your payment and will start processing your order shortly.
+            {orderDetails.paymentStatus === 'TXN_SUCCESS' 
+              ? "Thank you for your order. We've received your payment and will start processing your order shortly."
+              : "Your order has been placed but payment is pending. Please complete the payment to confirm your order."}
           </p>
+          {orderDetails.transactionId && (
+            <p className="font-mono text-sm text-muted-foreground mt-2">
+              Transaction ID: {orderDetails.transactionId}
+            </p>
+          )}
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">

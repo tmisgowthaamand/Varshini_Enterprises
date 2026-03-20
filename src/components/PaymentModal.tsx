@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { X, Truck, CheckCircle } from 'lucide-react';
+import { X, CreditCard, CheckCircle, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 import { PaymentMethod } from '@/contexts/CartContext';
 
 interface PaymentModalProps {
@@ -13,6 +13,8 @@ interface PaymentModalProps {
   itemCount: number;
 }
 
+const BACKEND_URL = 'http://localhost:3000';
+
 const PaymentModal: React.FC<PaymentModalProps> = ({
   isOpen,
   onClose,
@@ -20,42 +22,65 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   total,
   itemCount,
 }) => {
-  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>('cash-on-delivery' as PaymentMethod);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { toast } = useToast();
 
-  const paymentMethods = [
-    {
-      id: 'cash-on-delivery' as PaymentMethod,
-      name: 'Cash on Delivery',
-      description: 'Pay when your order arrives',
-      icon: Truck,
-      popular: false,
-    },
-  ];
-
-  const handlePaymentSelect = (method: PaymentMethod) => {
-    setSelectedMethod(method);
-  };
-
-  const handleConfirmPayment = async () => {
-    if (!selectedMethod) return;
-
+  const handlePaytmPayment = async () => {
     setIsProcessing(true);
+    
+    try {
+      const orderId = `ORDER_${Date.now()}`;
+      const customerId = `CUST_${Date.now()}`;
+      
+      const response = await fetch(`${BACKEND_URL}/api/payment/initiate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderId,
+          amount: total.toFixed(2),
+          customerId,
+          customerEmail: 'customer@example.com',
+          customerPhone: '9876543210'
+        }),
+      });
 
-    // Simulate payment processing
-    setTimeout(() => {
+      const data = await response.json();
+
+      if (data.success) {
+        // Create form and submit to Paytm
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = data.data.transactionUrl;
+        
+        const bodyInput = document.createElement('input');
+        bodyInput.type = 'hidden';
+        bodyInput.name = 'body';
+        bodyInput.value = JSON.stringify(data.data.paytmParams.body);
+        form.appendChild(bodyInput);
+
+        const headInput = document.createElement('input');
+        headInput.type = 'hidden';
+        headInput.name = 'head';
+        headInput.value = JSON.stringify(data.data.paytmParams.head);
+        form.appendChild(headInput);
+
+        document.body.appendChild(form);
+        form.submit();
+      } else {
+        throw new Error(data.message || 'Payment initiation failed');
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast({
+        title: "Payment Failed",
+        description: error instanceof Error ? error.message : "Unable to process payment. Please try again.",
+        variant: "destructive",
+      });
       setIsProcessing(false);
-      setIsSuccess(true);
-
-      // Auto close after success
-      setTimeout(() => {
-        onPaymentSelect(selectedMethod);
-        onClose();
-        setIsSuccess(false);
-        setSelectedMethod(null);
-      }, 2000);
-    }, 1500);
+    }
   };
 
   if (!isOpen) return null;
@@ -83,11 +108,12 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
       <Card className="w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between p-6 border-b">
           <h2 className="font-nunito font-bold text-xl text-foreground">
-            Choose Payment Method
+            Complete Payment
           </h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-muted rounded-full transition-colors"
+            disabled={isProcessing}
           >
             <X className="w-5 h-5" />
           </button>
@@ -100,8 +126,8 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
               <span className="font-inter text-sm text-muted-foreground">
                 {itemCount} item{itemCount > 1 ? 's' : ''}
               </span>
-              <span className="font-nunito font-bold text-lg text-primary">
-                ₹{total}
+              <span className="font-nunito font-bold text-2xl text-primary">
+                ₹{total.toFixed(2)}
               </span>
             </div>
             <div className="text-xs text-muted-foreground">
@@ -109,59 +135,28 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
             </div>
           </div>
 
-          {/* Payment Methods */}
-          <div className="flex justify-center mb-6">
-            <div className="w-full max-w-md space-y-3">
-              {paymentMethods.map((method) => {
-                const Icon = method.icon;
-                const isSelected = selectedMethod === method.id;
-
-                return (
-                  <div
-                    key={method.id}
-                    className="relative p-6 border-2 rounded-xl transition-all border-primary bg-primary/5 cursor-default"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <div className="p-3 rounded-full bg-primary text-white">
-                        <Icon className="w-6 h-6" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2">
-                          <span className="font-nunito font-bold text-lg text-foreground">
-                            {method.name}
-                          </span>
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          {method.description}
-                        </p>
-                      </div>
-                      <CheckCircle className="w-6 h-6 text-primary" />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Confirm Button */}
+          {/* Payment Button */}
           <Button
-            onClick={handleConfirmPayment}
-            disabled={!selectedMethod || isProcessing}
-            className="w-full"
+            onClick={handlePaytmPayment}
+            disabled={isProcessing}
+            className="w-full h-14 text-lg"
             size="lg"
           >
             {isProcessing ? (
               <div className="flex items-center space-x-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <Loader2 className="w-5 h-5 animate-spin" />
                 <span>Processing...</span>
               </div>
             ) : (
-              `Confirm Payment - ₹${total}`
+              <div className="flex items-center space-x-2">
+                <CreditCard className="w-5 h-5" />
+                <span>Pay with Paytm</span>
+              </div>
             )}
           </Button>
 
-          <p className="text-xs text-muted-foreground text-center mt-3">
-            Your payment information is secure and encrypted
+          <p className="text-xs text-muted-foreground text-center mt-4">
+            Secure payment powered by Paytm. Your payment information is encrypted and secure.
           </p>
         </CardContent>
       </Card>
