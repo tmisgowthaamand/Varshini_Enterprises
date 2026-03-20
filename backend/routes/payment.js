@@ -19,24 +19,24 @@ console.log('Merchant ID:', PAYTM_MERCHANT_ID);
 console.log('Website:', PAYTM_WEBSITE);
 console.log('Merchant Key (raw):', JSON.stringify(PAYTM_MERCHANT_KEY));
 
-// Test checksum endpoint for debugging
-router.get('/test-checksum', async (req, res) => {
+// Test endpoint to verify merchant credentials
+router.get('/verify-merchant', (req, res) => {
   try {
-    const testString = 'WtByJK14940032907936|TEST123|CUST123|100.00|DEFAULT|WEB|Retail|test@example.com|9999999999|https://varshini-enterprises-gqnz.onrender.com/api/payment/callback';
-
-    console.log('Test Checksum String:', testString);
-    console.log('Using Merchant Key:', PAYTM_MERCHANT_KEY);
-
-    const checksum = await PaytmChecksum.generateSignature(
-      testString,
-      PAYTM_MERCHANT_KEY
-    );
+    const merchantInfo = {
+      merchantId: PAYTM_MERCHANT_ID || 'NOT SET',
+      merchantKeyLength: PAYTM_MERCHANT_KEY?.length || 0,
+      merchantKey: PAYTM_MERCHANT_KEY || 'NOT SET',
+      website: PAYTM_WEBSITE || 'NOT SET',
+      callbackUrl: PAYTM_CALLBACK_URL || 'NOT SET',
+      channelId: PAYTM_CHANNEL_ID_WEB || 'NOT SET',
+      industryType: PAYTM_INDUSTRY_TYPE || 'NOT SET'
+    };
 
     res.json({
-      testString,
-      merchantKey: PAYTM_MERCHANT_KEY,
-      merchantKeyLength: PAYTM_MERCHANT_KEY?.length,
-      checksum
+      success: true,
+      message: 'Merchant credentials loaded',
+      data: merchantInfo,
+      hint: 'Verify Merchant ID and Key match your Paytm dashboard exactly'
     });
   } catch (error) {
     res.json({ error: error.message });
