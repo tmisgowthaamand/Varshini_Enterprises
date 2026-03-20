@@ -28,11 +28,11 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
   const handlePaytmPayment = async () => {
     setIsProcessing(true);
-    
+
     try {
       const orderId = `ORDER_${Date.now()}`;
       const customerId = `CUST_${Date.now()}`;
-      
+
       const response = await fetch(`${BACKEND_URL}/api/payment/initiate`, {
         method: 'POST',
         headers: {
@@ -49,23 +49,18 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
       const data = await response.json();
 
-      if (data.success) {
-        // Create form and submit to Paytm
+      if (data.success && data.data.paytmParams) {
+        // Create form and submit to Paytm using traditional form flow
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = data.data.transactionUrl;
-        
-        const params = {
-          mid: data.data.mid,
-          orderId: data.data.orderId,
-          txnToken: data.data.txnToken
-        };
 
-        Object.keys(params).forEach((key) => {
+        // Add Paytm parameters as hidden form fields
+        Object.keys(data.data.paytmParams).forEach((key) => {
           const input = document.createElement('input');
           input.type = 'hidden';
           input.name = key;
-          input.value = params[key as keyof typeof params];
+          input.value = data.data.paytmParams[key];
           form.appendChild(input);
         });
 
