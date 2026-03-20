@@ -83,8 +83,16 @@ router.post('/callback', async (req, res) => {
   try {
     console.log('Payment callback received:', req.body);
     
-    const paytmChecksum = req.body.CHECKSUMHASH;
+    const paytmChecksum = req.body.CHECKSUMHASH || req.body.checksumhash;
+    
+    if (!paytmChecksum) {
+      console.error('Missing CHECKSUMHASH in Paytm callback. Full Body:', JSON.stringify(req.body));
+      // Just redirect back to the home page or a failed transaction page
+      return res.redirect('https://varshinienterprises.vercel.app/order-confirmation?status=TXN_FAILURE&respmsg=Missing_Checksum');
+    }
+
     delete req.body.CHECKSUMHASH;
+    delete req.body.checksumhash;
 
     const isVerified = PaytmChecksum.verifySignature(
       req.body,
