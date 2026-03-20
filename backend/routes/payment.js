@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const PaytmChecksum = require('paytmchecksum');
-const axios = require('axios');
 
 const {
   PAYTM_MERCHANT_ID,
